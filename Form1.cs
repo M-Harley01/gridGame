@@ -13,15 +13,27 @@ namespace grid
 {
     public partial class Form1 : Form
     {
-
+        // boolean isBlackTurn to keep track of what players turn it is
         bool isBlackTurn = true;
+
+        // Button array to initialise the board width and height
         Button[,] button = new Button[8, 8];
+
+        //ArrayList used to store colours when traversing the board, used mostly for troubleshooting
         ArrayList storedColours = new ArrayList();
+
+        //Stores colours to add to the ArrayList
         string storedColour;
 
         public Form1()
         {
             InitializeComponent();
+
+            
+           /* For loop to draw the board, set the colour of the squares on the board, 
+            * set spacing of buttons on the board, size of the buttons on the board,
+            * set writing on the buttons */
+             
 
             for (int i = 0; i < button.GetLength(0); i++)
             {
@@ -36,11 +48,15 @@ namespace grid
                 }
             }
 
+            //four buttons used to set the centeral starting squares to begin the game
+
             button[4,4].BackColor = Color.Black;
             button[4,3].BackColor = Color.White;
             button[3,3].BackColor = Color.Black;
             button[3,4].BackColor = Color.White;
         }
+
+        /* method that begins the game,  */
 
         void buttonEvent_Click(object sender, EventArgs e)
         {
@@ -115,10 +131,8 @@ namespace grid
                     foundSameColor = true;
                     Console.WriteLine("Tile of the same colour found at position " + x + "," + i + " " + currentButton.BackColor.ToString());
 
-                    // Set startPOS before entering the loop
                     int startPOS = y;
-
-                    // Loop to change the color of buttons between the current and target positions
+                   
                     for (int j = i + 1; j < startPOS; j++)
                     {
                         if (isBlackTurn)
@@ -166,8 +180,6 @@ namespace grid
         {
             bool foundSameColor = false;
 
-            //Vertical search to find etiher a tile of the same colour or the top of the board
-
             for (int i = y + 1; i < 8; i++)
             {
                 Button currentButton = button[x, i];
@@ -176,11 +188,9 @@ namespace grid
                 {
                     foundSameColor = true;
                     Console.WriteLine("Tile of the same colour found at position " + x + "," + i + " " + currentButton.BackColor.ToString());
-
-                    // Set startPOS before entering the loop
+                   
                     int startPOS = y;
 
-                    // Loop to change the color of buttons between the current and target positions
                     for (int j = i - 1; j > startPOS; j--)
                     {
                         if (isBlackTurn)
@@ -228,7 +238,6 @@ namespace grid
         {
             bool foundSameColor = false;
 
-            // Horizontal search to find either a tile of the same colour or the right edge of the board
             for (int i = x + 1; i < button.GetLength(0); i++)
             {
                 Button currentButton = button[i, y];
@@ -239,8 +248,7 @@ namespace grid
                     Console.WriteLine("Tile of the same colour found at position " + i + "," + y + " " + currentButton.BackColor.ToString());
                 
                     int startPOS = x;
-
-                    // Loop to change the color of buttons between the current and target positions
+                 
                     for (int j = i - 1; j > startPOS; j--)
                     {
                         if (isBlackTurn)
@@ -284,8 +292,7 @@ namespace grid
         public void searchLeft(int x, int y, string colour)
         {
             bool foundSameColor = false;
-
-            // Horizontal search to find either a tile of the same colour or the left edge of the board
+            
             for (int i = x - 1; i >= 0; i--)
             {
                 Button currentButton = button[i, y];
@@ -294,11 +301,9 @@ namespace grid
                 {
                     foundSameColor = true;
                     Console.WriteLine("Tile of the same colour found at position " + i + "," + y + " " + currentButton.BackColor.ToString());
-
-                    // Set startPOS before entering the loop
+                    
                     int startPOS = x;
-
-                    // Loop to change the color of buttons between the current and target positions
+                   
                     for (int j = i + 1; j < startPOS; j++)
                     {
                         if (isBlackTurn)
@@ -342,8 +347,7 @@ namespace grid
         public void searchTopLeft(int x, int y, string colour)
         {
             bool foundSameColor = false;
-
-            // Horizontal search to find either a tile of the same colour or the left edge of the board
+           
             for (int i = x - 1, j = y - 1; i >= 0 && j >= 0; i--, j--)
             {
                 Button currentButton = button[i, j];
@@ -352,12 +356,10 @@ namespace grid
                 {
                     foundSameColor = true;
                     Console.WriteLine("Tile of the same colour found at position " + i + "," + j + " " + currentButton.BackColor.ToString());
-
-                    // Set startPOS before entering the loop
+                   
                     int xStartPOS = x;
                     int yStartPOS = y;
-
-                    // Loop to change the color of buttons between the current and target positions
+                    
                     for (int k = i + 1, l = j+1; k < xStartPOS && l < yStartPOS; k++, l++)
                     {
                         if (isBlackTurn)
@@ -401,8 +403,7 @@ namespace grid
         public void searchTopRight(int x, int y, string colour)
         {
             bool foundSameColor = false;
-
-            // Horizontal search to find either a tile of the same colour or the left edge of the board
+            
             for (int i = x + 1, j = y - 1; i < 8 && j >= 0; i++, j--)
             {
                 Button currentButton = button[i, j];
@@ -411,12 +412,10 @@ namespace grid
                 {
                     foundSameColor = true;
                     Console.WriteLine("Tile of the same colour found at position " + i + "," + j + " " + currentButton.BackColor.ToString());
-
-                    // Set startPOS before entering the loop
+                    
                     int xStartPOS = x;
                     int yStartPOS = y;
-
-                    // Loop to change the color of buttons between the current and target positions
+                    
                     for (int k = i - 1, l = j + 1; k > xStartPOS && l < yStartPOS; k--, l++)
                     {
                         if (isBlackTurn)
@@ -460,8 +459,7 @@ namespace grid
         public void searchBottomLeft(int x, int y, string colour)
         {
             bool foundSameColor = false;
-
-            // Horizontal search to find either a tile of the same colour or the left edge of the board
+            
             for (int i = x - 1, j = y + 1; i >= 0 && j < 8 ; i--, j++)
             {
                 Button currentButton = button[i, j];
@@ -470,12 +468,10 @@ namespace grid
                 {
                     foundSameColor = true;
                     Console.WriteLine("Tile of the same colour found at position " + i + "," + j + " " + currentButton.BackColor.ToString());
-
-                    // Set startPOS before entering the loop
+               
                     int xStartPOS = x;
                     int yStartPOS = y;
-
-                    // Loop to change the color of buttons between the current and target positions
+                    
                     for (int k = i + 1, l = j - 1; k < xStartPOS && l > yStartPOS; k++, l--)
                     {
                         if (isBlackTurn)
@@ -519,8 +515,7 @@ namespace grid
         public void searchBottomRight(int x, int y, string colour)
         {
             bool foundSameColor = false;
-
-            // Horizontal search to find either a tile of the same colour or the left edge of the board
+            
             for (int i = x + 1, j = y + 1; i < 8 && j < 8; i++, j++)
             {
                 Button currentButton = button[i, j];
@@ -529,12 +524,10 @@ namespace grid
                 {
                     foundSameColor = true;
                     Console.WriteLine("Tile of the same colour found at position " + i + "," + j + " " + currentButton.BackColor.ToString());
-
-                    // Set startPOS before entering the loop
+                   
                     int xStartPOS = x;
                     int yStartPOS = y;
-
-                    // Loop to change the color of buttons between the current and target positions
+                    
                     for (int k = i - 1, l = j - 1; k > xStartPOS && l > yStartPOS; k--, l--)
                     {
                         if (isBlackTurn)
