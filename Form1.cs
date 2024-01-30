@@ -54,8 +54,6 @@ namespace grid
             button[4, 3].BackColor = Color.White;
             button[3, 3].BackColor = Color.Black;
             button[3, 4].BackColor = Color.White;
-
-
         }
 
         /* method that begins the game,  */
@@ -63,6 +61,12 @@ namespace grid
         void buttonEvent_Click(object sender, EventArgs e)
         {
             Button pressedButton = sender as Button;
+
+            if(pressedButton.BackColor != Color.Green)
+            {
+                Console.WriteLine("Wrong tile chosen, you nasty man!");
+                return;
+            }
 
             string name = pressedButton.Name;
 
@@ -81,24 +85,30 @@ namespace grid
                 colour = pressedButton.BackColor.ToString();
 
                 //up search
-                search(x, y, 0, -1, colour);
+                bool validMove = search(x, y, 0, -1, colour);
                 //down search
-                search(x, y, 0, 1, colour);
+                validMove |= search(x, y, 0, 1, colour);
                 //right search
-                search(x, y, 1, 0, colour);
+                validMove |= search(x, y, 1, 0, colour);
                 //left search
-                search(x, y, -1, 0, colour);
+                validMove |= search(x, y, -1, 0, colour);
                 //Top right search 
-                search(x, y, 1, -1, colour);
+                validMove |= search(x, y, 1, -1, colour);
                 //bottom left search
-                search(x, y, -1, 1, colour);
+                validMove |= search(x, y, -1, 1, colour);
                 //bottom right search
-                search(x, y, 1, 1, colour);
+                validMove |= search(x, y, 1, 1, colour);
                 //top left search
-                search(x, y, -1, -1, colour);
-
+                validMove |= search(x, y, -1, -1, colour);
 
                 storedColours.Clear();
+
+                if(!validMove)
+                {
+                    pressedButton.BackColor = Color.Green;
+                    return;
+                }
+
 
                 isBlackTurn = false;
             }
@@ -113,31 +123,38 @@ namespace grid
                 colour = pressedButton.BackColor.ToString();
 
                 //up search
-                search(x, y, 0, -1, colour);
+                bool validMove = search(x, y, 0, -1, colour);
                 //down search
-                search(x, y, 0, 1, colour);
+                validMove |= search(x, y, 0, 1, colour);
                 //right search
-                search(x, y, 1, 0, colour);
+                validMove |= search(x, y, 1, 0, colour);
                 //left search
-                search(x, y, -1, 0, colour);
+                validMove |= search(x, y, -1, 0, colour);
                 //Top right search 
-                search(x, y, 1, -1, colour);
+                validMove |= search(x, y, 1, -1, colour);
                 //bottom left search
-                search(x, y, -1, 1, colour);
+                validMove |= search(x, y, -1, 1, colour);
                 //bottom right search
-                search(x, y, 1, 1, colour);
+                validMove |= search(x, y, 1, 1, colour);
                 //top left search
-                search(x, y, -1, -1, colour);
+                validMove |= search(x, y, -1, -1, colour);
 
                 storedColours.Clear();
+
+                if (!validMove)
+                {
+                    pressedButton.BackColor = Color.Green;
+                    return;
+                }
 
                 isBlackTurn = true;
             }
         }
 
-        public void search(int x, int y, int deltaX, int deltaY, string colour)
+        public bool search(int x, int y, int deltaX, int deltaY, string colour)
         {
             bool foundSameColor = false;
+
             int foundX = x;
             int foundY = y;
 
@@ -148,14 +165,16 @@ namespace grid
 
                 if (foundX < 0 || foundY < 0 || foundX >= 8 || foundY >= 8)
                 {
-                    return;
+                    foundSameColor = false;
+                    return foundSameColor;
                 }
 
                 Button currentButton = button[foundX, foundY];
                 if (button[foundX, foundY].BackColor == Color.Green)
                 {
                     Console.WriteLine("NO! ");
-                    return;
+                    foundSameColor = false;
+                    return foundSameColor;
                 }
                 else if (currentButton.BackColor.ToString() == colour)
                 {
@@ -185,7 +204,7 @@ namespace grid
                     Console.WriteLine("Changed color at " + x + "," + y + " to " + button[x, y].BackColor);
                 }
             }
-
+            return foundSameColor;
         }
        
         private void Form1_Load(object sender, EventArgs e)
