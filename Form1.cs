@@ -19,21 +19,13 @@ namespace grid
         // Button array to initialise the board width and height
         Button[,] button = new Button[8, 8];
 
-        //ArrayList used to store colours when traversing the board, used mostly for troubleshooting
-        ArrayList storedColours = new ArrayList();
-
-        //Stores colours to add to the ArrayList
-        string storedColour;
-
         public Form1()
         {
             InitializeComponent();
-
             
            /* For loop to draw the board, set the colour of the squares on the board, 
             * set spacing of buttons on the board, size of the buttons on the board,
             * set writing on the buttons */
-             
 
             for (int i = 0; i < button.GetLength(0); i++)
             {
@@ -54,22 +46,27 @@ namespace grid
             button[4, 3].BackColor = Color.White;
             button[3, 3].BackColor = Color.Black;
             button[3, 4].BackColor = Color.White;
-
         }
 
-        /* method that begins the game,  */
+        /* method that begins the game */
 
         void buttonEvent_Click(object sender, EventArgs e)
         {
+            //button variable to allow the users input on the board to be stored
             Button pressedButton = sender as Button;
+
+            /* if statement to stop the user being able to place tiles on buttons 
+             * that are either black or white */
 
             if(pressedButton.BackColor != Color.Green)
             {
-                Console.WriteLine("Wrong tile chosen, you nasty man!");
+                Console.WriteLine("Invalid input");
                 return;
             }
 
-            string name = pressedButton.Name;
+            /* integer x, y and a string called colour to store the x and 
+               y coordinate and the colour to be extracted from the button
+               pressed */
 
             int x;
             int y;
@@ -78,11 +75,22 @@ namespace grid
             if (isBlackTurn)
             {
                 Console.WriteLine(((Button)sender).Text);
+
+                // sets the colour of the button to black when the user who is black presses the button 
+
                 pressedButton.BackColor = Color.Black;
-                Console.WriteLine(name);
+
+                /* code to allow the x and y coordinates to be extracted 
+                 * from the string containing them */
 
                 x = int.Parse(pressedButton.Text[0].ToString());
                 y = int.Parse(pressedButton.Text[2].ToString());
+
+                /* Colour extracted from the buttons
+                 * back colour and stored into a string to be passed
+                 * into the search method in order to tell whos turn 
+                 * it is */
+
                 colour = pressedButton.BackColor.ToString();
 
                 //up search
@@ -102,7 +110,9 @@ namespace grid
                 //top left search
                 validMove |= search(x, y, -1, -1, colour);
 
-                storedColours.Clear();
+                /* if statement that ensures that if an invalid move is
+                   selected by the user then the tile they clicked on is 
+                   reverted to its original colour */
 
                 if(!validMove)
                 {
@@ -110,17 +120,29 @@ namespace grid
                     return;
                 }
 
+                // at the end of blacks turn the booloean isBlackTurn is set to false in order to let it progress to whites turn
 
                 isBlackTurn = false;
             }
             else
             {
                 Console.WriteLine(((Button)sender).Text);
+
+                // sets the colour of the button to white when the user who is black presses the button 
+
                 pressedButton.BackColor = Color.White;
-                Console.WriteLine(pressedButton.Name);
+
+                /* code to allow the x and y coordinates to be extracted 
+                 * from the string containing them */
 
                 x = int.Parse(pressedButton.Text[0].ToString());
                 y = int.Parse(pressedButton.Text[2].ToString());
+
+                /* Colour extracted from the buttons
+                 * back colour and stored into a string to be passed
+                 * into the search method in order to tell whos turn 
+                 * it is */
+
                 colour = pressedButton.BackColor.ToString();
 
                 //up search
@@ -140,7 +162,9 @@ namespace grid
                 //top left search
                 validMove |= search(x, y, -1, -1, colour);
 
-                storedColours.Clear();
+                /* if statement that ensures that if an invalid move is
+                   selected by the user then the tile they clicked on is 
+                   reverted to its original colour */
 
                 if (!validMove)
                 {
@@ -148,21 +172,40 @@ namespace grid
                     return;
                 }
 
+                // at the end of blacks turn the booloean isBlackTurn is set to true in order to let it progress to Blacks turn
+
                 isBlackTurn = true;
             }
         }
 
+        /* Search method that allows the board to be searched in all directions that there could be a valid move. It takes input of 
+           an x and y coordinate, deltaX, deltaY and finally a colour. The x and y coordinate are self explanitory and take the x and 
+           y coordinates of the button pressed. The deltaX and deltaY variables are used to determine the direction that the search method
+           traverses through the tiles in */
+
         public bool search(int x, int y, int deltaX, int deltaY, string colour)
         {
+            // boolean used to determine if a tile of the same colour has been found from where a tile has been placed
+
             bool foundSameColor = false;
+
+            /* Integers foundX and foundY are created and initialised at the values of the x and y coordinates passed into the 
+               functions. They will then be incremented by the deltaX and deltaY, which is how the game searches across the 
+               board */
 
             int foundX = x;
             int foundY = y;
 
             while (true)
             {
+                /* incrementatioin of foundX and foundY by deltaX and deltaY */
+
                 foundX += deltaX;
                 foundY += deltaY;
+
+                /* if statement that allows the game to tell if the edge of the board is reached
+                 * in which case the same colour has not been found and so found same colour is 
+                   set to false, and is returned to the valid move boolean from before.*/ 
 
                 if (foundX < 0 || foundY < 0 || foundX >= 8 || foundY >= 8)
                 {
@@ -170,11 +213,18 @@ namespace grid
                     return foundSameColor;
                 }
 
+                /* New button called currentButton thats used to keep track of the current button 
+                   as the board is being traverssed. This is then followed by an if statement that
+                   works under the condition that if the button at foundX and foundY is equal to Green
+                   then the user has given an invalid input. there then is an else if staement that works
+                   by checking if the current button is then equal to the colour initially passed into the method.
+                   If this is the case then found same colour then found same colour is set to true. */
+
                 Button currentButton = button[foundX, foundY];
 
                 if (button[foundX, foundY].BackColor == Color.Green)
                 {
-                    Console.WriteLine("NO! ");
+                    Console.WriteLine("Invalid input");
                     foundSameColor = false;
                     return foundSameColor;
                 }
@@ -186,7 +236,15 @@ namespace grid
                 }
             }
 
+            //innt counter used to count the space between a tile placed and a tile of the same colour
+
             int count = 0;
+
+            /* while loop set up so that while the x or y coordinates passed into the method are not equal
+             * to foundX and foundY then the x and y coordinates are incremented by deltaX and deltaY. Within
+             * this while loop is an if statement that states that ifBlackTurn is true then the backcolour of the 
+               button is changed to black and the same is done for the else if staement except ifBlackTurn is
+               set to false and the backcolour is then set to white.*/
 
             while (x != foundX || y != foundY)
             {
@@ -210,10 +268,12 @@ namespace grid
                     Console.WriteLine("Changed color at " + x + "," + y + " to " + button[x, y].BackColor);
                 }
             }
+
+            //if statement that returns false if a button of the same colour has been found next to one placed
             
             if(count == 1)
             {
-                Console.WriteLine("You canny put a tile there mate");
+                Console.WriteLine("Invalid input");
                 return false;
             }
 
