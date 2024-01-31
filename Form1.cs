@@ -54,6 +54,7 @@ namespace grid
             button[4, 3].BackColor = Color.White;
             button[3, 3].BackColor = Color.Black;
             button[3, 4].BackColor = Color.White;
+
         }
 
         /* method that begins the game,  */
@@ -170,6 +171,7 @@ namespace grid
                 }
 
                 Button currentButton = button[foundX, foundY];
+
                 if (button[foundX, foundY].BackColor == Color.Green)
                 {
                     Console.WriteLine("NO! ");
@@ -184,6 +186,8 @@ namespace grid
                 }
             }
 
+            int count = 0;
+
             while (x != foundX || y != foundY)
             {
                 x += deltaX;
@@ -195,15 +199,24 @@ namespace grid
                 if (isBlackTurn)
                 {
                     button[x, y].BackColor = Color.Black;
+                    count ++;
                     Console.WriteLine("Changed color at " + x + "," + y + " to " + button[x, y].BackColor);
                 }
 
                 else if (!isBlackTurn)
                 {
                     button[x, y].BackColor = Color.White;
+                    count ++;
                     Console.WriteLine("Changed color at " + x + "," + y + " to " + button[x, y].BackColor);
                 }
             }
+            
+            if(count == 1)
+            {
+                Console.WriteLine("You canny put a tile there mate");
+                return false;
+            }
+
             return foundSameColor;
         }
        
