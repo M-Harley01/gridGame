@@ -24,16 +24,24 @@ namespace grid
         int blackScore = 2;
         int whiteScore = 2;
 
+        private Panel boardBackgroundPanel;
         public Form1()
         {
             InitializeComponent();
 
             scoreLabel = new Label();
 
+            scoreLabel.ForeColor = Color.White;
+
             scoreLabel.Text = "Black tiles: " + blackScore + "\nWhite tiles: " + whiteScore;
             scoreLabel.SetBounds(550, 75, 500, 1000);
             scoreLabel.Font = new Font("Arial", 12, FontStyle.Bold);
             Controls.Add(scoreLabel);
+
+            boardBackgroundPanel = new Panel();
+            boardBackgroundPanel.SetBounds(50, 30, 520, 520); 
+            boardBackgroundPanel.BackColor = Color.SaddleBrown; 
+            Controls.Add(boardBackgroundPanel);
 
             /* For loop to draw the board, set the colour of the squares on the board, 
              * set spacing of buttons on the board, size of the buttons on the board,
@@ -48,9 +56,11 @@ namespace grid
                     button[i, j].BackColor = Color.Green;
                     button[i, j].Text = Convert.ToString((i) + "," + (j));
                     button[i, j].Click += new EventHandler(this.buttonEvent_Click);
-                    Controls.Add(button[i, j]);
+                    boardBackgroundPanel.Controls.Add(button[i, j]);
                 }
             }
+
+            scoreLabel.SetBounds(600, 75, 100, 100);
 
             //four buttons used to set the centeral starting squares to begin the game
 
@@ -300,10 +310,26 @@ namespace grid
             return foundSameColor;
         }
 
+        /*
+         count tiles method to cound the total number 
+         of tiles on the board after each turn
+         */
         public void countTiles()
         {
+
+            /*Setting black and white scores to 0 at the start of each call of the mehtod so 
+             that all the tiles can be counted on the board and added correctly
+             */
+
             blackScore = 0;
             whiteScore = 0;
+
+
+            /*
+             Nested for loop that itterates through the board and checks all the tiles 
+             on the board. If the tile is green it ignores anything related to the scores,
+             if the tiles are either black or white it increments the appropriate score
+             */
 
             for (int x = 0; x < 8; x++)
             {
@@ -323,6 +349,8 @@ namespace grid
                     }
                 }
             }
+
+            //updating the label with the new score
 
             scoreLabel.Text = "Black tiles: " + blackScore + "\nWhite tiles: " + whiteScore;
         }

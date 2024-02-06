@@ -34,9 +34,10 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1528, 821);
+            this.BackColor = System.Drawing.Color.Green;
+            this.ClientSize = new System.Drawing.Size(1542, 914);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "Othello";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
 
