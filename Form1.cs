@@ -19,24 +19,36 @@ namespace grid
         // Button array to initialise the board width and height
         Button[,] button = new Button[8, 8];
 
+        Label scoreLabel;
+
+        int blackScore = 2;
+        int whiteScore = 2;
+
         public Form1()
         {
             InitializeComponent();
-            
-           /* For loop to draw the board, set the colour of the squares on the board, 
-            * set spacing of buttons on the board, size of the buttons on the board,
-            * set writing on the buttons */
+
+            scoreLabel = new Label();
+
+            scoreLabel.Text = "Black tiles: " + blackScore + "\nWhite tiles: " + whiteScore;
+            scoreLabel.SetBounds(550, 75, 500, 1000);
+            scoreLabel.Font = new Font("Arial", 12, FontStyle.Bold);
+            Controls.Add(scoreLabel);
+
+            /* For loop to draw the board, set the colour of the squares on the board, 
+             * set spacing of buttons on the board, size of the buttons on the board,
+             * set writing on the buttons */
 
             for (int i = 0; i < button.GetLength(0); i++)
             {
                 for (int j = 0; j < button.GetLength(1); j++)
                 {
-                    button[i,j]= new Button();
-                    button[i,j].SetBounds(55 + (55*i), 55 + (55 * j), 45, 45);
+                    button[i, j] = new Button();
+                    button[i, j].SetBounds(55 + (55 * i), 55 + (55 * j), 45, 45);
                     button[i, j].BackColor = Color.Green;
                     button[i, j].Text = Convert.ToString((i) + "," + (j));
                     button[i, j].Click += new EventHandler(this.buttonEvent_Click);
-                    Controls.Add(button[i,j]);
+                    Controls.Add(button[i, j]);
                 }
             }
 
@@ -58,7 +70,7 @@ namespace grid
             /* if statement to stop the user being able to place tiles on buttons 
              * that are either black or white */
 
-            if(pressedButton.BackColor != Color.Green)
+            if (pressedButton.BackColor != Color.Green)
             {
                 Console.WriteLine("Invalid input");
                 return;
@@ -110,15 +122,19 @@ namespace grid
                 //top left search
                 validMove |= search(x, y, -1, -1, colour);
 
+                
+
                 /* if statement that ensures that if an invalid move is
                    selected by the user then the tile they clicked on is 
                    reverted to its original colour */
 
-                if(!validMove)
+                if (!validMove)
                 {
                     pressedButton.BackColor = Color.Green;
                     return;
                 }
+
+                countTiles();
 
                 // at the end of blacks turn the booloean isBlackTurn is set to false in order to let it progress to whites turn
 
@@ -162,6 +178,8 @@ namespace grid
                 //top left search
                 validMove |= search(x, y, -1, -1, colour);
 
+                
+
                 /* if statement that ensures that if an invalid move is
                    selected by the user then the tile they clicked on is 
                    reverted to its original colour */
@@ -171,6 +189,8 @@ namespace grid
                     pressedButton.BackColor = Color.Green;
                     return;
                 }
+
+                countTiles();
 
                 // at the end of blacks turn the booloean isBlackTurn is set to true in order to let it progress to Blacks turn
 
@@ -205,7 +225,7 @@ namespace grid
 
                 /* if statement that allows the game to tell if the edge of the board is reached
                  * in which case the same colour has not been found and so found same colour is 
-                   set to false, and is returned to the valid move boolean from before.*/ 
+                   set to false, and is returned to the valid move boolean from before.*/
 
                 if (foundX < 0 || foundY < 0 || foundX >= 8 || foundY >= 8)
                 {
@@ -250,28 +270,28 @@ namespace grid
             {
                 x += deltaX;
                 y += deltaY;
-                
+
                 Console.WriteLine($"replacing at: X{x} Y:{y}");
 
 
                 if (isBlackTurn)
                 {
                     button[x, y].BackColor = Color.Black;
-                    count ++;
+                    count++;
                     Console.WriteLine("Changed color at " + x + "," + y + " to " + button[x, y].BackColor);
                 }
 
                 else if (!isBlackTurn)
                 {
                     button[x, y].BackColor = Color.White;
-                    count ++;
+                    count++;
                     Console.WriteLine("Changed color at " + x + "," + y + " to " + button[x, y].BackColor);
                 }
             }
 
             //if statement that returns false if a button of the same colour has been found next to one placed
-            
-            if(count == 1)
+
+            if (count == 1)
             {
                 Console.WriteLine("Invalid input");
                 return false;
@@ -279,7 +299,34 @@ namespace grid
 
             return foundSameColor;
         }
-       
+
+        public void countTiles()
+        {
+            blackScore = 0;
+            whiteScore = 0;
+
+            for (int x = 0; x < 8; x++)
+            {
+                for (int y = 0; y < 8; y++)
+                {
+                    if (button[x, y].BackColor == Color.Green)
+                    {
+                        continue;
+                    }
+                    else if (button[x, y].BackColor == Color.Black)
+                    {
+                        blackScore++;
+                    }
+                    else if (button[x, y].BackColor == Color.White)
+                    {
+                        whiteScore++;
+                    }
+                }
+            }
+
+            scoreLabel.Text = "Black tiles: " + blackScore + "\nWhite tiles: " + whiteScore;
+        }
+
         private void Form1_Load(object sender, EventArgs e)
         {
 
