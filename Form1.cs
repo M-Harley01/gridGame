@@ -194,6 +194,7 @@ namespace grid
                 if (!validMove)
                 {
                     pressedButton.BackColor = Color.Green;
+                    pressedButton.ForeColor = Color.Green;
                     return;
                 }
 
