@@ -42,9 +42,11 @@ namespace grid
         {
             InitializeComponent();
 
+            int initialTop = 100;
+
             // Initialisation of forefit button
             forefitTurn = new Button();
-            forefitTurn.SetBounds(650, 500, 180, 60); 
+            forefitTurn.SetBounds(650, 350, 180, 60); 
             forefitTurn.Text = "Forefit turn";
             forefitTurn.Font = new Font("Arial", 15, FontStyle.Bold);
             forefitTurn.Click += new EventHandler(this.buttonEvent_Click);
@@ -56,14 +58,16 @@ namespace grid
             scoreLabel.ForeColor = Color.White;
             scoreLabel.Text = "Black tiles: " + blackScore + "\n" + "\nWhite tiles: " + whiteScore + "\n" + "\nPlayer turn: " + playerTurn;
             scoreLabel.Font = new Font("Arial", 15, FontStyle.Bold);
-            scoreLabel.SetBounds(650, 55, 600, 600);
+            scoreLabel.SetBounds(650, 200, 600, 600);
             Controls.Add(scoreLabel);
+
+            
 
             /* Panel set up to sit behind the grid to act as a board for all the squares */
 
             boardBackgroundPanel = new Panel();
-            boardBackgroundPanel.SetBounds(55, 55, 520, 520); 
-            boardBackgroundPanel.BackColor = Color.GhostWhite;
+            boardBackgroundPanel.SetBounds(55, initialTop, 450, 450); 
+            boardBackgroundPanel.BackColor = Color.FromArgb(255, 87, 48, 21);
             Controls.Add(boardBackgroundPanel);
 
             /* For loop to draw the board, set the colour of the squares on the board, 
@@ -75,7 +79,9 @@ namespace grid
                 for (int j = 0; j < button.GetLength(1); j++)
                 {
                     button[i, j] = new Button();
-                    button[i, j].SetBounds(55 + (55 * i), 55 + (55 * j), 45, 45);
+                    button[i, j].FlatStyle = FlatStyle.Flat;
+                    button[i, j].SetBounds(25 + (50 * i), 25 + (50 * j), 50, 50);
+                    button[i, j].FlatAppearance.BorderColor = Color.Gray;
                     button[i, j].BackColor = Color.Green;
                     button[i, j].Text = Convert.ToString((i) + "," + (j));
                     button[i, j].Click += new EventHandler(this.buttonEvent_Click);
@@ -410,7 +416,7 @@ namespace grid
             }
             else if(whiteScore > blackScore)
             {
-                winnerWinnerChickenDinner = "Black wins!";
+                winnerWinnerChickenDinner = "White wins!";
                 Console.WriteLine("White wins!");
                 scoreLabel.Font = new Font("Arial", 40, FontStyle.Bold);
                 scoreLabel.Text = winnerWinnerChickenDinner;
