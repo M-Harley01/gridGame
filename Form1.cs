@@ -19,28 +19,51 @@ namespace grid
         // Button array to initialise the board width and height
         Button[,] button = new Button[8, 8];
 
+        // label to store the number of tiles for each player
         Label scoreLabel;
 
+        //Black score and white score initialised at 2 for the beginning of the game
         int blackScore = 2;
         int whiteScore = 2;
 
+        // String to store what players turn it is
+        string playerTurn = "Black";
+
+        // Winner string for the winner
+        string winnerWinnerChickenDinner;
+
+        // Panel used to place behind the grid to give the impression of the board
         private Panel boardBackgroundPanel;
+
+        //Button to forefit turn
+        Button forefitTurn = new Button();
+
         public Form1()
         {
             InitializeComponent();
 
+            // Initialisation of forefit button
+            forefitTurn = new Button();
+            forefitTurn.SetBounds(650, 500, 180, 60); 
+            forefitTurn.Text = "Forefit turn";
+            forefitTurn.Font = new Font("Arial", 15, FontStyle.Bold);
+            forefitTurn.Click += new EventHandler(this.buttonEvent_Click);
+            forefitTurn.BackColor = Color.White;
+            Controls.Add(forefitTurn);
+
+            // Initialisation of the score label
             scoreLabel = new Label();
-
             scoreLabel.ForeColor = Color.White;
-
-            scoreLabel.Text = "Black tiles: " + blackScore + "\nWhite tiles: " + whiteScore;
-            scoreLabel.SetBounds(550, 75, 500, 1000);
-            scoreLabel.Font = new Font("Arial", 12, FontStyle.Bold);
+            scoreLabel.Text = "Black tiles: " + blackScore + "\n" + "\nWhite tiles: " + whiteScore + "\n" + "\nPlayer turn: " + playerTurn;
+            scoreLabel.Font = new Font("Arial", 15, FontStyle.Bold);
+            scoreLabel.SetBounds(650, 55, 600, 600);
             Controls.Add(scoreLabel);
 
+            /* Panel set up to sit behind the grid to act as a board for all the squares */
+
             boardBackgroundPanel = new Panel();
-            boardBackgroundPanel.SetBounds(50, 30, 520, 520); 
-            boardBackgroundPanel.BackColor = Color.SaddleBrown; 
+            boardBackgroundPanel.SetBounds(55, 55, 520, 520); 
+            boardBackgroundPanel.BackColor = Color.GhostWhite;
             Controls.Add(boardBackgroundPanel);
 
             /* For loop to draw the board, set the colour of the squares on the board, 
@@ -60,8 +83,6 @@ namespace grid
                 }
             }
 
-            scoreLabel.SetBounds(600, 75, 100, 100);
-
             //four buttons used to set the centeral starting squares to begin the game
 
             button[4, 4].BackColor = Color.Black;
@@ -74,6 +95,22 @@ namespace grid
 
         void buttonEvent_Click(object sender, EventArgs e)
         {
+
+            if (sender == forefitTurn && isBlackTurn)
+            {
+                Console.WriteLine("Turn forfeited!");
+                isBlackTurn = false;
+                playerTurn = "white";
+                countTiles();
+            }
+            else if(sender == forefitTurn && !isBlackTurn)
+            {
+                Console.WriteLine("Turn forfeited!");
+                isBlackTurn = true;
+                playerTurn = "Black";
+                countTiles();
+            }
+
             //button variable to allow the users input on the board to be stored
             Button pressedButton = sender as Button;
 
@@ -96,6 +133,7 @@ namespace grid
 
             if (isBlackTurn)
             {
+                
                 Console.WriteLine(((Button)sender).Text);
 
                 // sets the colour of the button to black when the user who is black presses the button 
@@ -144,14 +182,15 @@ namespace grid
                     return;
                 }
 
+                playerTurn = "White";
                 countTiles();
-
                 // at the end of blacks turn the booloean isBlackTurn is set to false in order to let it progress to whites turn
 
                 isBlackTurn = false;
             }
             else
             {
+                
                 Console.WriteLine(((Button)sender).Text);
 
                 // sets the colour of the button to white when the user who is black presses the button 
@@ -188,8 +227,6 @@ namespace grid
                 //top left search
                 validMove |= search(x, y, -1, -1, colour);
 
-                
-
                 /* if statement that ensures that if an invalid move is
                    selected by the user then the tile they clicked on is 
                    reverted to its original colour */
@@ -200,8 +237,8 @@ namespace grid
                     return;
                 }
 
+                playerTurn = "Black";
                 countTiles();
-
                 // at the end of blacks turn the booloean isBlackTurn is set to true in order to let it progress to Blacks turn
 
                 isBlackTurn = true;
@@ -323,8 +360,7 @@ namespace grid
 
             blackScore = 0;
             whiteScore = 0;
-
-
+            int foundGreen = 0;
             /*
              Nested for loop that itterates through the board and checks all the tiles 
              on the board. If the tile is green it ignores anything related to the scores,
@@ -337,6 +373,7 @@ namespace grid
                 {
                     if (button[x, y].BackColor == Color.Green)
                     {
+                        foundGreen++;
                         continue;
                     }
                     else if (button[x, y].BackColor == Color.Black)
@@ -347,13 +384,39 @@ namespace grid
                     {
                         whiteScore++;
                     }
+                    
                 }
+            }
+
+            if (foundGreen == 0)
+            {
+                gameOver();
+                return;
             }
 
             //updating the label with the new score
 
-            scoreLabel.Text = "Black tiles: " + blackScore + "\nWhite tiles: " + whiteScore;
+            scoreLabel.Text = "Black tiles: " + blackScore + "\n" + "\nWhite tiles: " + whiteScore + "\n" + "\nPlayer turn: " + playerTurn;
         }
+
+        public void gameOver()
+        {
+            if (blackScore > whiteScore)
+            {
+                winnerWinnerChickenDinner = "Black wins!";
+                Console.WriteLine("Black wins!");
+                scoreLabel.Font = new Font("Arial", 40, FontStyle.Bold);
+                scoreLabel.Text = winnerWinnerChickenDinner;
+            }
+            else if(whiteScore > blackScore)
+            {
+                winnerWinnerChickenDinner = "Black wins!";
+                Console.WriteLine("White wins!");
+                scoreLabel.Font = new Font("Arial", 40, FontStyle.Bold);
+                scoreLabel.Text = winnerWinnerChickenDinner;
+            }   
+
+        }       
 
         private void Form1_Load(object sender, EventArgs e)
         {
