@@ -83,7 +83,7 @@ namespace grid
                     button[i, j].SetBounds(25 + (50 * i), 25 + (50 * j), 50, 50);
                     button[i, j].FlatAppearance.BorderColor = Color.Gray;
                     button[i, j].BackColor = Color.Green;
-                    button[i, j].ForeColor = Color.OrangeRed;
+                    button[i, j].ForeColor = Color.Green;
                     button[i, j].Text = Convert.ToString((i) + "," + (j));
                     button[i, j].Click += new EventHandler(this.buttonEvent_Click);
                     boardBackgroundPanel.Controls.Add(button[i, j]);
@@ -93,9 +93,16 @@ namespace grid
             //four buttons used to set the centeral starting squares to begin the game
 
             button[4, 4].BackColor = Color.Black;
+            button[4, 4].ForeColor = Color.Black;
+
             button[4, 3].BackColor = Color.White;
+            button[4, 3].ForeColor = Color.White;
+
             button[3, 3].BackColor = Color.Black;
+            button[3, 3].ForeColor = Color.Black;
+
             button[3, 4].BackColor = Color.White;
+            button[3, 4].ForeColor = Color.White;
         }
 
         /* method that begins the game */
@@ -159,6 +166,7 @@ namespace grid
                  * it is */
 
                 colour = pressedButton.BackColor.ToString();
+                pressedButton.ForeColor = Color.Black;
 
                 //up search
                 bool validMove = search(x, y, 0, -1, colour);
@@ -216,6 +224,7 @@ namespace grid
                  * it is */
 
                 colour = pressedButton.BackColor.ToString();
+                pressedButton.ForeColor = Color.White;
 
                 //up search
                 bool validMove = search(x, y, 0, -1, colour);
@@ -331,6 +340,7 @@ namespace grid
                 if (isBlackTurn)
                 {
                     button[x, y].BackColor = Color.Black;
+                    button[x, y].ForeColor = Color.Black;
                     count++;
                     Console.WriteLine("Changed color at " + x + "," + y + " to " + button[x, y].BackColor);
                 }
@@ -338,6 +348,7 @@ namespace grid
                 else if (!isBlackTurn)
                 {
                     button[x, y].BackColor = Color.White;
+                    button[x, y].ForeColor = Color.White;
                     count++;
                     Console.WriteLine("Changed color at " + x + "," + y + " to " + button[x, y].BackColor);
                 }
