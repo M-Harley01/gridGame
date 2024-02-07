@@ -30,7 +30,7 @@ namespace grid
         string playerTurn = "Black";
 
         // Winner string for the winner
-        string winnerWinnerChickenDinner;
+        string winner;
 
         // Panel used to place behind the grid to give the impression of the board
         private Panel boardBackgroundPanel;
@@ -83,6 +83,7 @@ namespace grid
                     button[i, j].SetBounds(25 + (50 * i), 25 + (50 * j), 50, 50);
                     button[i, j].FlatAppearance.BorderColor = Color.Gray;
                     button[i, j].BackColor = Color.Green;
+                    button[i, j].ForeColor = Color.OrangeRed;
                     button[i, j].Text = Convert.ToString((i) + "," + (j));
                     button[i, j].Click += new EventHandler(this.buttonEvent_Click);
                     boardBackgroundPanel.Controls.Add(button[i, j]);
@@ -394,6 +395,8 @@ namespace grid
                 }
             }
 
+            //if statement to check and see if there are no more green tiles on the board, in which case the game is over and the gameOver function is called
+
             if (foundGreen == 0)
             {
                 gameOver();
@@ -409,17 +412,17 @@ namespace grid
         {
             if (blackScore > whiteScore)
             {
-                winnerWinnerChickenDinner = "Black wins!";
+                winner = "Black wins!";
                 Console.WriteLine("Black wins!");
                 scoreLabel.Font = new Font("Arial", 40, FontStyle.Bold);
-                scoreLabel.Text = winnerWinnerChickenDinner;
+                scoreLabel.Text = winner;
             }
             else if(whiteScore > blackScore)
             {
-                winnerWinnerChickenDinner = "White wins!";
+                winner = "White wins!";
                 Console.WriteLine("White wins!");
                 scoreLabel.Font = new Font("Arial", 40, FontStyle.Bold);
-                scoreLabel.Text = winnerWinnerChickenDinner;
+                scoreLabel.Text = winner;
             }   
 
         }       
