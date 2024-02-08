@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,6 +14,9 @@ namespace grid
 {
     public partial class Form1 : Form
     {
+        // string used to store the name of the text file that will store highscores
+        string highScoresFilePath = "highscores.txt";
+
         // boolean isBlackTurn to keep track of what players turn it is
         bool isBlackTurn = true;
 
@@ -20,11 +24,15 @@ namespace grid
         Button[,] button = new Button[8, 8];
 
         // label to store the number of tiles for each player
-        Label scoreLabel;
+        Label playerInfo;
+
+        // Title
+        Label Title;
 
         //Black score and white score initialised at 2 for the beginning of the game
         int blackScore = 2;
         int whiteScore = 2;
+        int[] highScores = new int[5];
 
         // String to store what players turn it is
         string playerTurn = "Black";
@@ -38,14 +46,42 @@ namespace grid
         //Button to forefit turn
         Button forefitTurn = new Button();
 
+        //Button to play again
+        Button playAgain = new Button();
+
+        //Button to close the game
+        Button close = new Button();
+
+        //High scores label
+        Label highScoresLabel = new Label();
+
         public Form1()
         {
             InitializeComponent();
 
-            int initialTop = 100;
+            //Initialisation of the highscore label
+            highScoresLabel.AutoSize = true;
+            highScoresLabel.Location = new Point(650, 450);
+            highScoresLabel.ForeColor = Color.White;
+            highScoresLabel.Font = new Font("Arial", 15, FontStyle.Bold);
+            Controls.Add(highScoresLabel);
+            LoadHighScores();
+
+            //space set from the board to the top of the form
+            int initialTop = 150;
+
+            // Title Initialisation
+            Title = new Label();
+            Title.ForeColor = Color.White;
+            Title.Text = "Othello";
+            Title.Font = new Font("Arial", 35, FontStyle.Bold);
+            Title.SetBounds(50, 50, 200, 100);
+            Controls.Add(Title);
 
             // Initialisation of forefit button
             forefitTurn = new Button();
+            forefitTurn.FlatStyle = FlatStyle.Flat;
+            forefitTurn.FlatAppearance.BorderColor = Color.Gray;
             forefitTurn.SetBounds(650, 350, 180, 60); 
             forefitTurn.Text = "Forefit turn";
             forefitTurn.Font = new Font("Arial", 15, FontStyle.Bold);
@@ -53,15 +89,39 @@ namespace grid
             forefitTurn.BackColor = Color.White;
             Controls.Add(forefitTurn);
 
-            // Initialisation of the score label
-            scoreLabel = new Label();
-            scoreLabel.ForeColor = Color.White;
-            scoreLabel.Text = "Black tiles: " + blackScore + "\n" + "\nWhite tiles: " + whiteScore + "\n" + "\nPlayer turn: " + playerTurn;
-            scoreLabel.Font = new Font("Arial", 15, FontStyle.Bold);
-            scoreLabel.SetBounds(650, 200, 600, 600);
-            Controls.Add(scoreLabel);
+            // Initialisation of play again button
+            playAgain = new Button();
+            playAgain.FlatStyle = FlatStyle.Flat;
+            playAgain.FlatAppearance.BorderColor = Color.Gray;
+            playAgain.SetBounds(650, 350, 180, 60);
+            playAgain.Text = "Play again?";
+            playAgain.Font = new Font("Arial", 15, FontStyle.Bold);
+            playAgain.Click += new EventHandler(this.buttonEvent_Click);
+            playAgain.BackColor = Color.White;
+            playAgain.Hide();
+            Controls.Add(playAgain);
 
-            
+            // Initialisation of close button
+            close = new Button();
+            close.FlatStyle = FlatStyle.Flat;
+            close.FlatAppearance.BorderColor = Color.Gray;
+            close.SetBounds(650, 450, 180, 60);
+            close.Text = "Close game?";
+            close.Font = new Font("Arial", 15, FontStyle.Bold);
+            close.Click += new EventHandler(this.buttonEvent_Click);
+            close.BackColor = Color.White;
+            close.Hide();
+            Controls.Add(close);
+
+            // Initialisation of the score label
+            playerInfo = new Label();
+            playerInfo.ForeColor = Color.White;
+            playerInfo.Text = "Black tiles: " + blackScore + "\n" + "\nWhite tiles: " + whiteScore + "\n" + "\nPlayer turn: " + playerTurn;
+            playerInfo.Font = new Font("Arial", 15, FontStyle.Bold);
+            playerInfo.SetBounds(650, 200, 600, 600);
+            Controls.Add(playerInfo);
+
+
 
             /* Panel set up to sit behind the grid to act as a board for all the squares */
 
@@ -109,6 +169,10 @@ namespace grid
 
         void buttonEvent_Click(object sender, EventArgs e)
         {
+            /*
+             if and else if statements to handle if a turn is forefitted by checking if a turn is either black or white
+             and by checking if the forfiet button has been pressed. 
+             */
 
             if (sender == forefitTurn && isBlackTurn)
             {
@@ -123,6 +187,24 @@ namespace grid
                 isBlackTurn = true;
                 playerTurn = "Black";
                 countTiles();
+            }
+
+            /*
+             Play again function
+             */
+
+            if (sender == playAgain)
+            {
+                playAgain.Hide();
+                highScoresLabel.Show();
+                close.Hide();
+                resetBoard();               
+            }
+
+            //close button function
+            if (sender == close)
+            {
+                Application.Exit();
             }
 
             //button variable to allow the users input on the board to be stored
@@ -251,6 +333,7 @@ namespace grid
                 if (!validMove)
                 {
                     pressedButton.BackColor = Color.Green;
+                    pressedButton.ForeColor = Color.Green;
                     return;
                 }
 
@@ -417,27 +500,184 @@ namespace grid
 
             //updating the label with the new score
 
-            scoreLabel.Text = "Black tiles: " + blackScore + "\n" + "\nWhite tiles: " + whiteScore + "\n" + "\nPlayer turn: " + playerTurn;
+            playerInfo.Text = "Black tiles: " + blackScore + "\n" + "\nWhite tiles: " + whiteScore + "\n" + "\nPlayer turn: " + playerTurn;
         }
+
+        /*
+         Game over function that processes when a game is finished, it does this by using if statements to see what colour of tile had a higher score at
+         the end of the board being cleared. After doing this it then displays the winner to the player info label and shows the winners score also. The 
+         UpdateHighScore method is called and the winning score is passed as a parameter. At the end of the method there is also a for loop that iterates 
+         through the current high scores stored and stores the score if applicable and also allows for the list to be rearranged if a new highscore is set
+         */
 
         public void gameOver()
         {
+            int winningScore = 0;
+
             if (blackScore > whiteScore)
             {
                 winner = "Black wins!";
                 Console.WriteLine("Black wins!");
-                scoreLabel.Font = new Font("Arial", 40, FontStyle.Bold);
-                scoreLabel.Text = winner;
+                playerInfo.Font = new Font("Arial", 20, FontStyle.Bold);
+                playerInfo.Text = winner + "\n" + "score: " + blackScore;
+                winningScore = blackScore;
             }
             else if(whiteScore > blackScore)
             {
                 winner = "White wins!";
                 Console.WriteLine("White wins!");
-                scoreLabel.Font = new Font("Arial", 40, FontStyle.Bold);
-                scoreLabel.Text = winner;
-            }   
+                playerInfo.Font = new Font("Arial", 20, FontStyle.Bold);
+                playerInfo.Text = winner + "\n" + "score: " + whiteScore;
+                winningScore = whiteScore;
+            }
 
-        }       
+            UpdateHighScores(winningScore);
+
+            forefitTurn.Hide();
+            highScoresLabel.Hide();
+            playAgain.Show();
+            close.Show();
+
+            /*
+             for loop to update the highscores when a new highscore 
+             */
+
+            for (int i = 0; i < highScores.Length; i++)
+            {
+                if (winningScore > highScores[i])
+                {
+                    for (int j = highScores.Length - 1; j > i; j--)
+                    {
+                        highScores[j] = highScores[j - 1];
+                    }
+                    highScores[i] = winningScore;
+                    break;
+                }
+            }
+            saveHighScores();
+        }
+
+        private void UpdateHighScores(int winningScore)
+        {
+            // Check if the winning score is higher than any of the high scores
+            if (isBlackTurn && winningScore > highScores[0])
+            {
+                // Shift the existing high scores to make room for the new one
+                for (int j = highScores.Length - 1; j > 0; j--)
+                {
+                    highScores[j] = highScores[j - 1];
+                }
+
+                // Insert the new score at the appropriate position
+                highScores[0] = winningScore;
+
+                // Save high scores after updating them
+                saveHighScores();
+            }
+        }
+
+        /*
+         Save High Score method to allow the highscore to be saved into a text file. This is done using Streamwriter
+         and searching through the array of highScores in order to store every element to a text file
+         */
+
+        private void saveHighScores()
+        {
+            try
+            {
+                using (StreamWriter writer = new StreamWriter(highScoresFilePath))
+                {
+                    foreach (int score in highScores)
+                    {
+                        writer.WriteLine(score);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error saving high scores: {ex.Message}");
+            }
+        }
+
+        /* 
+         LoadHighScores method used to load the high scores from the text file. This is done by first checking if the file that is to be searched
+         exists, if it doesnt exist an error message is then written to the console window. If the file does exist then a string array called lines is
+         used to store the lines stored in the highScoresFilePath. A for loop is then used to iterate through lines and highScores, at each point of 
+         this iteration the lines at i are then changed to strings and passed into the highscores array at i.
+         */
+
+        private void LoadHighScores()
+        {
+            try
+            {
+                if (File.Exists(highScoresFilePath))
+                {
+                    string[] lines = File.ReadAllLines(highScoresFilePath);
+
+                    for (int i = 0; i < lines.Length && i < highScores.Length; i++)
+                    {
+                        if (int.TryParse(lines[i], out int score))
+                        {
+                            highScores[i] = score;
+                        }
+                    }
+
+                    //for loop to iterate through the highscore array and print them onto the highscore label text
+
+                    highScoresLabel.Text = "High Scores:\n";
+                    for (int i = 0; i < highScores.Length; i++)
+                    {
+                        highScoresLabel.Text += $"{i + 1}. {highScores[i]}\n";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error loading high scores: {ex.Message}");
+            }
+        }
+
+        /*
+         resetBoard method used to reset the board if the user decides they want to play again. The mehtod simply
+         resets all the black and white squares to green and hides the plat again button. It also resets the scores
+         and the turn back to being the black players turn
+         */
+
+        public void resetBoard()
+        {
+            for (int i = 0; i < button.GetLength(0); i++)
+            {
+                for (int j = 0; j < button.GetLength(1); j++)
+                {
+                    button[i, j].BackColor = Color.Green;
+                    button[i, j].ForeColor = Color.Green;
+                }
+            }
+
+            button[4, 4].BackColor = Color.Black;
+            button[4, 4].ForeColor = Color.Black;
+
+            button[4, 3].BackColor = Color.White;
+            button[4, 3].ForeColor = Color.White;
+
+            button[3, 3].BackColor = Color.Black;
+            button[3, 3].ForeColor = Color.Black;
+
+            button[3, 4].BackColor = Color.White;
+            button[3, 4].ForeColor = Color.White;
+
+            isBlackTurn = true;
+            playerTurn = "Black";
+            blackScore = 2;
+            whiteScore = 2;
+
+            playerInfo.Font = new Font("Arial", 15, FontStyle.Bold);
+            playerInfo.Text = "Black tiles: " + blackScore + "\n" + "\nWhite tiles: " + whiteScore + "\n" + "\nPlayer turn: " + playerTurn;
+
+            playAgain.Hide();
+            forefitTurn.Show();
+            LoadHighScores();
+        }
 
         private void Form1_Load(object sender, EventArgs e)
         {
