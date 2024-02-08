@@ -117,14 +117,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="1649738189150" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\1649738189150.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="basic_strategy_othello_1" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\basic_strategy_othello_1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="cute-light-green-tartan-checkers-gingham-plaid-checkerboard-background-illustration-perfect-for-banner-wallpaper-backdrop-postcard-background-vector" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\cute-light-green-tartan-checkers-gingham-plaid-checkerboard-background-illustration-perfect-for-banner-wallpaper-backdrop-postcard-background-vector.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="label1.Text" xml:space="preserve">
+    <value>Othello Help Screen 
+
+Welcome to our Othello game. To play the game the player needs to click on the box they want to choose and switch to the next player.
+
+This game has two players so each player takes turn to make their move. When playing the game there is a forfit button to use if one of the player doesn't wamt to their turn and switch to the other player to go.
+
+To win the game the player must have majority of their colour discs face up on the board at the end of the game </value>
   </data>
 </root>
