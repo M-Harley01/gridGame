@@ -154,6 +154,7 @@ namespace grid
 
             button[4, 4].BackColor = Color.Black;
             button[4, 4].ForeColor = Color.Black;
+           // button[4, 4].BackgroundImage = global::grid.Properties.Resources.;
 
             button[4, 3].BackColor = Color.White;
             button[4, 3].ForeColor = Color.White;
