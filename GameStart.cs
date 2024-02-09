@@ -22,6 +22,8 @@ namespace grid
             Form1 gameWindow = new Form1();
 
             gameWindow.Show();
+
+            this.Hide();
         }
 
         private void LoadHelp(object sender, EventArgs e)
@@ -29,6 +31,8 @@ namespace grid
             HelpScreen helpWindow = new HelpScreen();
 
             helpWindow.Show();
+
+            this.Hide();
         }
     }
 }

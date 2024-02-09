@@ -110,7 +110,8 @@ namespace grid
             close.Font = new Font("Arial", 15, FontStyle.Bold);
             close.Click += new EventHandler(this.buttonEvent_Click);
             close.BackColor = Color.White;
-            close.Hide();
+            close.Location = new System.Drawing.Point(650, 50);
+            close.Show();
             Controls.Add(close);
 
             // Initialisation of the score label
@@ -140,8 +141,8 @@ namespace grid
                 {
                     button[i, j] = new Button();
                     button[i, j].FlatStyle = FlatStyle.Flat;
-                    button[i, j].SetBounds(25 + (50 * i), 25 + (50 * j), 50, 50);
                     button[i, j].FlatAppearance.BorderColor = Color.Gray;
+                    button[i, j].SetBounds(25 + (50 * i), 25 + (50 * j), 50, 50);
                     button[i, j].BackColor = Color.Green;
                     button[i, j].ForeColor = Color.Green;
                     button[i, j].Text = Convert.ToString((i) + "," + (j));
@@ -154,7 +155,7 @@ namespace grid
 
             button[4, 4].BackColor = Color.Black;
             button[4, 4].ForeColor = Color.Black;
-           // button[4, 4].BackgroundImage = global::grid.Properties.Resources.;
+            //button[4, 4].BackgroundImage = global::grid.Properties.Resources;
 
             button[4, 3].BackColor = Color.White;
             button[4, 3].ForeColor = Color.White;

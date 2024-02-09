@@ -110,5 +110,11 @@
   <ItemGroup>
     <None Include="Resources\cute-light-green-tartan-checkers-gingham-plaid-checkerboard-background-illustration-perfect-for-banner-wallpaper-backdrop-postcard-background-vector.jpg" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\example1%281%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Screenshot 2024-02-09 101651.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
